@@ -1,3 +1,5 @@
-#DSA but more fun
-The Coolest of DSA learning portals
+# DSA but more fun
+
+
+College but more fun!!
 
