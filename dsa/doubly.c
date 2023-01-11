@@ -164,7 +164,7 @@ void del_pos()
 		ptr -> prev -> next = ptr -> next;
 		ptr -> next -> prev = ptr -> prev;
 		
-		free(ptr);
+		ptr = NULL;
 	}
 }
 
