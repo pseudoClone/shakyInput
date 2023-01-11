@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
       printf("y[%d]:", i);
       scanf("%f", &y[i]);
     }
-  for(int i=0;i<n;i++)
+  for(int i = 0 ; i < n ; ++i)
     {
       sumx = sumx + x[i];
       sumxx = sumxx + x[i] * x[i];
