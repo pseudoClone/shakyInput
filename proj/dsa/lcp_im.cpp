@@ -5,13 +5,26 @@
 #include <cstdbool>
 #include <fstream>
 
-#define CHAR_TO_INDEX(c) (int)c - (int)'a' // Character to index conversion from trieIntro.c
+
+// #include <termios.h>
+// #include <unistd.h>
+
 
 using namespace std;
 
 
-// LCP Struct
-struct trie_word {
+#define CHAR_TO_INDEX(c) ((int)c - (int)'a')
+
+/*
+ * 
+ *
+ *
+ * LCP 
+ *
+ *
+ * */
+struct trie_word
+{
 	bool wordState;
 	unordered_map<char, trie_word*> character;
 
@@ -20,82 +33,7 @@ struct trie_word {
 	}
 };
 
-// AutoComplete Node
-struct trie_node {
-	struct trie_node* child[26]; // Alphabets
-	bool wordEnd;
-};
-
-// Autocomplete alloc Node
-struct trie_node* giveMeNode()
-{
-	struct trie_node* p_node = new trie_node;
-	p_node -> wordEnd = false;
-
-	for(size_t i = 0; i < 26; ++i) {
-		p_node -> child[i] = NULL;
-	}
-	return p_node;
-}
-
-// Autocomplete insert
-void ins_auto(struct trie_node* root, const string key_val)
-{
-	struct trie_node* traverse = root;
-	for (size_t lvl = 0; lvl < key_val.length(); ++lvl) {
-
-		int index = CHAR_TO_INDEX(key_val[lvl]);
-		if (!traverse -> child[index])
-			traverse -> child[index] = giveMeNode();
-		
-		traverse = traverse -> child[index];
-	}
-}
-
-bool isLeaf(struct trie_node* root)
-{
-	for (size_t i = 0; i < 26; ++i)
-		if (root -> child[i])
-			return 0;
-	return 1;
-}
-
-
-void auto_complOP(struct trie_node* root, string currPrefix)
-{
-	if (root -> wordEnd)
-		cout << currPrefix << endl;
- 
-	for (size_t i = 0; i < 26; ++i)
-		if (root -> child[i]) {
-			char child = 'a' + i;
-			auto_complOP(root->child[i], currPrefix + child);
-		}
-}
-
-
-int compl_ptr(struct trie_node* root, const string query)
-{
-	struct trie_node* traverse = root;
-	for (char c : query) {
-		int index = CHAR_TO_INDEX(c);
- 
-		if (!traverse->child[index])
-			return 0;
- 
-		traverse = traverse->child[index];
-	}
-	if (isLeaf(traverse)) {
-		cout << query << endl;
-		return -1;
-	}
-	auto_complOP(traverse, query);
-	return 1;
-}
-
-
-// LCP insert Node
-void insert(trie_word* root, string str)
+void insert(trie_word* root, std::string str)
 {
 
 	trie_word* temp = root;
@@ -113,17 +51,17 @@ void insert(trie_word* root, string str)
 	temp -> wordState = true;
 }
  
-// LCP search Func
-string findLCP(vector<string> dict)
+
+std::string findLCP(vector<std::string> dict)
 {
 
 	trie_word* head = new trie_word();
 	
-	for (string s: dict) {
+	for (std::string s: dict) {
 		insert(head, s);
 	}
 
-	string lcp;
+	std::string lcp;
 	
 	trie_word* temp = head;
  
@@ -143,20 +81,130 @@ string findLCP(vector<string> dict)
 	return lcp;
 }
 
+/*
+ *
+ * LCP
+ *
+ *
+ * */
+
+
+/*
+ *
+ * Autocomplete
+ *
+ * */
+
+
+ 
+struct compl_trie {
+	
+	struct compl_trie* kids[52];
+ 
+	bool word_end;
+};
+ 
+struct compl_trie* getNode(void)
+{
+	struct compl_trie* new_node = new compl_trie;
+	new_node -> word_end = false;
+ 
+	for (size_t i = 0; i < 52; ++i)
+		new_node -> kids[i] = NULL;
+ 
+	return new_node;
+}
+ 
+void ins_auto(struct compl_trie* root, const std::string key_val)
+{
+	struct compl_trie* traverse_node = root;
+ 
+	for (size_t lvl = 0; lvl < key_val . length(); ++lvl) {
+		int index = CHAR_TO_INDEX(key_val[lvl]);
+		if (!traverse_node -> kids[index])
+			traverse_node -> kids[index] = getNode();
+ 
+		traverse_node = traverse_node -> kids[index];
+	}
+	traverse_node -> word_end = true;
+}
+ 
+bool isLeaf(struct compl_trie* root)
+{
+	for (size_t i = 0; i < 52; ++i)
+		if (root -> kids[i])
+			return 0;
+	return 1;
+}
+ 
+void compl_oper(struct compl_trie* root, std::string currPrefix)
+{
+	if (root -> word_end)
+		std::cout << currPrefix << endl;
+ 
+	for (size_t i = 0; i < 52; ++i)
+
+		if (root -> kids[i]) {
+	  
+			char child = 'a' + i;
+			compl_oper(root -> kids[i], currPrefix + child);
+		}
+}
+ 
+int compl_io(compl_trie* root, const std::string query)
+{
+	struct compl_trie* traverse_node = root;
+	for (char c : query) {
+		int ind = CHAR_TO_INDEX(c);
+ 
+		if (!traverse_node->kids[ind])
+			return 0;
+ 
+		traverse_node = traverse_node->kids[ind];
+	}
+	if (isLeaf(traverse_node)) {
+		std::cout << query << endl;
+		return -1;
+	}
+	compl_oper(traverse_node, query);
+	return 1;
+}
+
+
+
+
+
+/*
+ *
+ * Autocomplete
+ *
+ * */
+
+
+
+
+/*
+
+  Set terminal attributes for better user experience
+
+ */
+
 
 int main(int argc, char **argv)
 {
-	string choice;
 
-	cout<<"\nAutocomplete or LCP? -> ";
-	cin>>choice;
+	std::string choice;
 
-	if (choice == "One" || choice == "1"
-	    ||choice == "ONE" || choice == "ONE") {
+coolLoop:
+
+	std::cout<<"\nAutocomplete(1) or LCP(2) ? -> ";
+	std::cin>>choice;
+
+	if (choice == "2") {
 		
-		vector<string> word_l;	// Keys
+		vector<std::string> word_l;	// Keys
 
-		string str_Val, filename;
+		std::string str_Val, filename;
 		fstream file;
 	
 		filename = "wordList.txt";
@@ -166,27 +214,31 @@ int main(int argc, char **argv)
 		while(file >> str_Val) {
 			word_l.push_back(str_Val);
 		}
-		cout <<std::endl<<"LCP: " << findLCP(word_l)<<"\n";
+		std::cout <<std::endl<<"LCP: " << findLCP(word_l)<<"\n";
 	}
-	else if(choice == "TWO" || choice == "two" || choice == "2"
-		||choice == "Two") {
+	else if(choice == "1") {
 
-		struct trie_node* root = giveMeNode();
-		string fileWord, fileName;
+		struct compl_trie* root = getNode();
+		std::string fileWord, fileName;
 		fstream file;
 		fileName = "dictionary.txt";
 		file.open(fileName . c_str());
 		while(file >> fileWord) {
 			ins_auto(root, fileWord);
 		}
-		int comp = compl_ptr(root, "hel");
-		if (comp == -1)
-			cout << "No other strings found with this prefix\n";
+		std::string termCap;
+		std::cout<<"Insert word for auto complete suggestion: ";
+		std::cin>> termCap;
+		int comp = compl_io(root, termCap);
+
+		if (comp == -1 || comp == 0)
+			std::cout << "Match not found\n";
  
-		else if (comp == 0)
-			cout << "No string found with this prefix\n";
-		
 		return 0;
+	}
+	else {
+		fputs("The choices are limited you know!!!!\n", stdout);
+		goto coolLoop;
 	}
 	
 	
