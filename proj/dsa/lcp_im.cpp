@@ -3,6 +3,7 @@
 #include <cstring>
 #include <vector>
 #include <cstdbool>
+#include <fstream>
 
 using namespace std;
 
@@ -67,12 +68,14 @@ string findLCP(vector<string> dict)
 int main(int argc, char **argv)
 {
 	vector<string> word_l;	// Keys
-	string str_Val;
-	
-	for(size_t i = 0; i < 5; ++i)
-	{
-		cout<<"Enter the string: "<<i+1<<": ";
-		cin>> str_Val;
+
+	string str_Val, filename;
+	fstream file;
+
+	filename = "wordList.txt";
+
+	file.open(filename . c_str());
+	while(file >> str_Val) {
 		word_l.push_back(str_Val);
 	}
 	cout <<std::endl<<"LCP: " << findLCP(word_l)<<"\n";
