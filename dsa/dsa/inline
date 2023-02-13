@@ -1,5 +1,0 @@
-1. When a function with a return statement is not returning any value and marked as inline, the compiler does not respond to the programmer’s request of making it an inline function.
-2. When a programmer tries to inline a function containing a loop (for, while, or do-while), the compiler refuses the inline suggestion.
-3. When a function is recursive, it cannot be inlined.
-4. A function containing static variables cannot be made an inline function. 
-5. The compiler declines the request of inlining a function if it contains any switch or go-to statements.
