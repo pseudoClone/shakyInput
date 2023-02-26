@@ -75,7 +75,8 @@ void main()
 		cleardevice();
 		flower_draw(t);
 		bee_draw(i);
-		if(state == 0 && abs(startx-gx/2) < 10 && abs(starty - ymax / 2) < 15)
+		if(state == 0 && abs(startx-gx/2) < 10
+		   && abs(starty - ymax / 2) < 15)
 		{
 			delay(2500);
 			state=1;

@@ -140,7 +140,8 @@ search_again:
 	if(choice == 1)
 		goto search_again;
 	else {
-		printf("\nDo you want to print the tree? 1 for yes and 0 for no: ");
+		printf("\nDo you want to print the tree? 1 for yes and 0 for no:
+				");
 		scanf("%d", &choice);
 		if(choice == 1)
 			traverse(head, words, 0); /* initial level is 0 */
