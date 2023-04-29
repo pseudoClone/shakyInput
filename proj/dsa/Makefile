@@ -1,6 +1,6 @@
 CC = g++
 
-CFLAGS = -g -W -std=c++17 
+CFLAGS = -g -Werror -std=c++17 
 
 TARGET = lcp_im
 
